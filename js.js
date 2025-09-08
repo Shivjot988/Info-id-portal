@@ -127,16 +127,17 @@ return `
                     <div class="form-group">
                         <label for="address-label-en-select">English Address</label>
                         <select id="address-label-en-select">
-                            <option value="Address :">Address :</option>
+                        <option value="address">Address :</option>
+                        <option value="Address :">Select</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="address-label-pa-select">Choose Address</label>
                         <select id="address-label-pa-select">
-                            <option value="select">Select</option>
-                            <option value="ਪਤਾ:">ਪਤਾ:</option>
-                            <option value="ঠিকনা :">ঠিকনা :</option>
+                        <option value="ਪਤਾ:">Select</option>
+                        <option value="ঠিকনা :">ঠিকনা :</option>
+                        <option value="ਪਤਾ:">ਪਤਾ:</option>
                             <option value="ঠিকানা: ">ঠিকানা: </option>
                             <option value="સરનામું:">સરનામું:</option>
                             <option value="पता :">पता :</option>
@@ -326,7 +327,7 @@ return `
             </div>
 
             <div class="controls-min">
-                <button id="download-btn" class="btn-primary">Download ID Front </button>
+                <button id="download-btn" class="btn-primary">Download ID Singal</button>
                 <button id="download-a4-png-btn" class="btn-primary">Download A4</button>
                 <button id="flip-btn" class="btn-outline">Flip Card</button>
             </div>
