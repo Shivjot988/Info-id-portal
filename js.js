@@ -127,8 +127,8 @@ return `
                     <div class="form-group">
                         <label for="address-label-en-select">English Address</label>
                         <select id="address-label-en-select">
-                        <option value="address">Address :</option>
                         <option value="Address :">Select</option>
+                        <option value="address">Address :</option>
                         </select>
                     </div>
 
