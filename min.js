@@ -1,4 +1,3 @@
-
 // Global variables to store DOM references
 let card, flipBtn, previewBtn, resetBtn, downloadBtn, downloadA4Btn, spinner;
 let tempCanvasContainer, successMessage;
@@ -482,6 +481,7 @@ function handleImageUpload(input, placeholder) {
             img.alt = file.name || '';
             img.style.maxWidth = '100%';
             img.style.height = '100%';
+            img.style.objectFit = 'cover';
             placeholder.appendChild(img);
             // Also attach data attribute for later use
             placeholder.dataset.imageData = e.target.result;
@@ -568,14 +568,13 @@ function createCleanClone(sideElement) {
     // ensure any <img> tags use the stored data URLs if available
     clone.querySelectorAll('img').forEach(img => {
         // try to map by alt/name or fallback to dataset on original placeholder elements
-        if (!img.src || img.src.startsWith('blob:') || img.src.startsWith('http')) {
-            const originalPlaceholder = findMatchingOriginalPlaceholder(sideElement, img);
-            if (originalPlaceholder && originalPlaceholder.dataset && originalPlaceholder.dataset.imageData) {
-                img.src = originalPlaceholder.dataset.imageData;
-            }
+        const originalPlaceholder = findMatchingOriginalPlaceholder(sideElement, img);
+        if (originalPlaceholder && originalPlaceholder.dataset && originalPlaceholder.dataset.imageData) {
+            img.src = originalPlaceholder.dataset.imageData;
         }
         img.style.maxWidth = '100%';
         img.style.height = '100%';
+        img.style.objectFit = 'cover';
         img.crossOrigin = 'anonymous';
     });
 
@@ -584,16 +583,22 @@ function createCleanClone(sideElement) {
 
 // Attempt to find the original placeholder element
 function findMatchingOriginalPlaceholder(originalSide, clonedImg) {
-    const candidates = originalSide.querySelectorAll('img, .photo-placeholder-front, .placeholder-front, .placeholder-back, .Front-Pic, .Back-Pic');
-    for (const el of candidates) {
-        if (el.tagName && el.tagName.toLowerCase() === 'img' && el.alt && clonedImg.alt && el.alt === clonedImg.alt) return el;
-        if (el.parentElement && clonedImg.parentElement && el.parentElement.className === clonedImg.parentElement.className) return el;
-        if (el.classList && clonedImg.parentElement && clonedImg.parentElement.classList) {
-            for (const c of el.classList) {
-                if (clonedImg.parentElement.classList.contains(c)) return el;
-            }
+    // Get all potential placeholder elements
+    const placeholders = originalSide.querySelectorAll('.photo-placeholder-front, .placeholder-front, .placeholder-back, .Front-Pic, .Back-Pic');
+    
+    for (const placeholder of placeholders) {
+        // Check if this placeholder has an image with the same alt text
+        const imgInPlaceholder = placeholder.querySelector('img');
+        if (imgInPlaceholder && imgInPlaceholder.alt === clonedImg.alt) {
+            return placeholder;
+        }
+        
+        // Check if the placeholder itself has the image data
+        if (placeholder.dataset && placeholder.dataset.imageData) {
+            return placeholder;
         }
     }
+    
     return null;
 }
 
@@ -651,11 +656,17 @@ async function downloadA4PNG() {
     try {
         spinner.style.display = 'block';
 
-        // create A4 container
+        // Create A4 container
         const a4 = document.createElement('div');
         a4.className = 'a4-page';
+        a4.style.position = 'relative';
+        a4.style.width = '210mm';
+        a4.style.height = '297mm';
+        a4.style.backgroundColor = 'white';
+        a4.style.padding = '20px';
+        a4.style.boxSizing = 'border-box';
 
-        // clones of both sides
+        // Create clones of both sides
         const frontClone = createCleanClone(cardFront);
         const backClone = createCleanClone(cardBack);
 
@@ -663,22 +674,20 @@ async function downloadA4PNG() {
         const wrapperRect = cardWrapper.getBoundingClientRect();
         const cardCssWidth = wrapperRect.width + 'px';
         const cardCssHeight = wrapperRect.height + 'px';
+        
         frontClone.style.width = cardCssWidth;
         frontClone.style.height = cardCssHeight;
         backClone.style.width = cardCssWidth;
         backClone.style.height = cardCssHeight;
 
-        // position them inside A4: top 5mm, left and right 10mm margin
-        frontClone.classList.add('a4-card');
-        backClone.classList.add('a4-card');
-
-        frontClone.style.top = '5mm';
-        frontClone.style.left = '100px';
+        // Position them inside A4
         frontClone.style.position = 'absolute';
-
-        backClone.style.top = '5mm';
-        backClone.style.right = '100px';
+        frontClone.style.top = '50px';
+        frontClone.style.left = '50px';
+        
         backClone.style.position = 'absolute';
+        backClone.style.top = '50px';
+        backClone.style.right = '50px';
 
         a4.appendChild(frontClone);
         a4.appendChild(backClone);
