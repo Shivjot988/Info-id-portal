@@ -1,3 +1,4 @@
+
 :root {
     --primary-color: #2c3e50;
     --secondary-color: #3498db;
@@ -443,8 +444,8 @@ button {
 
 /* A4 page container (for combined front/back export) */
 .a4-page {
-    width: 210mm;
-    height: 297mm;
+    width: 155mm;
+    height: 200mm;
     background: white;
     position: relative;
     box-sizing: border-box;
@@ -493,7 +494,7 @@ footer {
     .controls {
         display: flex;
         gap: 22px;
-        margin-left: -35px;
+        margin-left: -78px;
     }
 
     .controls-min {
