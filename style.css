@@ -443,14 +443,13 @@ button {
 
 /* A4 page container (for combined front/back export) */
 .a4-page {
-    /* Use true A4 size in CSS units so mm translates to physical proportions.
-         html2canvas will rasterize the CSS pixels — we will increase scale for high-res PNG. */
     width: 210mm;
     height: 297mm;
     background: white;
     position: relative;
     box-sizing: border-box;
     overflow: hidden;
+    padding: 20px;
 }
 
 /* positions for cards inside A4 */
