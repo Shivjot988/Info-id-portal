@@ -340,9 +340,17 @@ textarea {
 .controls {
     display: flex;
     gap: 8px;
-    justify-content: center;
     flex-direction: row-reverse;
+    justify-content: center;
+    width: 355px;
 }
+
+.controls-min {
+    display: flex;
+    gap: 12px;
+}
+
+
 
 button {
     padding: 3px 22px;
@@ -485,9 +493,15 @@ footer {
 
     .controls {
         display: flex;
-        gap: 7px;
-        margin-left: 43px;
+        gap: 22px;
+        margin-left: -78px;
     }
+
+    .controls-min {
+        display: flex;
+        gap: 13px;
+    }
+
 
     .form-group {
         margin-bottom: 1rem;
