@@ -325,7 +325,7 @@ return `
                 </div>
             </div>
 
-            <div class="controls">
+            <div class="controls-min">
                 <button id="download-btn" class="btn-primary">Download ID Front </button>
                 <button id="download-a4-png-btn" class="btn-primary">Download A4</button>
                 <button id="flip-btn" class="btn-outline">Flip Card</button>
