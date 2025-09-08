@@ -112,7 +112,7 @@ return `
                     <div class="form-group">
                         <label for="dob-label-select">Choose DOB label</label>
                         <select id="dob-label-select">
-                            <option value="ਜਨਮ ਮਿਤੀ/DOB:">select</option>
+                            <option value="ਜਨਮ ਮਿਤੀ/DOB:">Select</option>
                             <option value="ਜਨਮ ਮਿਤੀ/DOB:">ਜਨਮ ਮਿਤੀ/DOB:</option>
                             <option value="जन्म तिथि/DOB:">जन्म तिथि/DOB:</option>
                             <option value="জন্ম তারিখ/DOB:">জন্ম তারিখ/DOB:</option>
