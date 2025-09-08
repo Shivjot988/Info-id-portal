@@ -445,7 +445,7 @@ button {
 /* A4 page container (for combined front/back export) */
 .a4-page {
     width: 155mm;
-    height: 200mm;
+    height: 220mm;
     background: white;
     position: relative;
     box-sizing: border-box;
