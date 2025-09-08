@@ -493,7 +493,7 @@ footer {
     .controls {
         display: flex;
         gap: 22px;
-        margin-left: -78px;
+        margin-left: -35px;
     }
 
     .controls-min {
