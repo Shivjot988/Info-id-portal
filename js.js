@@ -128,9 +128,9 @@ return `
                         <label for="address-label-en-select">English Address</label>
                         <select id="address-label-en-select">
                         <option value="Address :">Select</option>
-                        <option value="address">Address :</option>
+                        <option value="Address">Address :</option>
                         </select>
-                    </div>
+                    </div
 
                     <div class="form-group">
                         <label for="address-label-pa-select">Choose Address</label>
