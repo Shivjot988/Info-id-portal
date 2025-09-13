@@ -112,7 +112,7 @@ return `
                     <div class="form-group">
                         <label for="dob-label-select">Choose DOB label</label>
                         <select id="dob-label-select">
-                            <option value="ਜਨਮ ਮਿਤੀ/DOB:">Select</option>
+                            <option value="ਜਨਮ ਮਿਤੀ/DOB:">select</option>
                             <option value="ਜਨਮ ਮਿਤੀ/DOB:">ਜਨਮ ਮਿਤੀ/DOB:</option>
                             <option value="जन्म तिथि/DOB:">जन्म तिथि/DOB:</option>
                             <option value="জন্ম তারিখ/DOB:">জন্ম তারিখ/DOB:</option>
@@ -128,9 +128,9 @@ return `
                         <label for="address-label-en-select">English Address</label>
                         <select id="address-label-en-select">
                         <option value="Address :">Select</option>
-                        <option value="Address">Address :</option>
+                        <option value="Address :">Address :</option>
                         </select>
-                    </div
+                    </div>
 
                     <div class="form-group">
                         <label for="address-label-pa-select">Choose Address</label>
@@ -138,9 +138,9 @@ return `
                         <option value="ਪਤਾ:">Select</option>
                         <option value="ঠিকনা :">ঠিকনা :</option>
                         <option value="ਪਤਾ:">ਪਤਾ:</option>
-                            <option value="ঠিকানা: ">ঠিকানা: </option>
-                            <option value="સરનામું:">સરનામું:</option>
-                            <option value="पता :">पता :</option>
+                        <option value="पता :">पता :</option>
+                        <option value="ঠিকানা: ">ঠিকানা: </option>
+                        <option value="સરનામું:">સરનામું:</option>
                         </select>
                     </div>
                 </div>
