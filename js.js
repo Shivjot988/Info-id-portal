@@ -1,6 +1,6 @@
 const productData = [
-{
-},
+    {
+    },
 ];
 
 /**
@@ -9,7 +9,7 @@ const productData = [
 * @param {Object} product - The product data object.
 */
 function ProductCard(product) {
-return `
+    return `
 
 
 
@@ -347,15 +347,15 @@ return `
 * @param {Array} products - An array of product objects.
 */
 function ProductList(products) {
-// Call the ProductCard component for each product and join the resulting strings
-const cardsHTML = products.map(item => ProductCard(item)).join('');
+    // Call the ProductCard component for each product and join the resulting strings
+    const cardsHTML = products.map(item => ProductCard(item)).join('');
 
-// Add the generated HTML to the container
-const container = document.getElementById('container');
-container.innerHTML = cardsHTML;
+    // Add the generated HTML to the container
+    const container = document.getElementById('container');
+    container.innerHTML = cardsHTML;
 }
 
 // Start the application after the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
-ProductList(productData);
+    ProductList(productData);
 });
