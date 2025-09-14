@@ -19,7 +19,7 @@ const villages = [
     "Ahmad Dhandi", "Alam Ke", "Amir Khas", "Araianwala", "Arnianwala", "Attu Wala", "Awan",
     "Badalke Hithar", "Badalke Uttar", "Baghe Ke Hithar", "Baghe Ke Uttar", "Baghuwala", "Bahadar Ke",
     "Bahmani Wala", "Baje Ke", "Balalke Kamalwala", "Balelke Hasal", "Balelke Rohela", "Bamewala",
-    "Barhan Bahtti", "Barhandinwala", "Basti Baba Sarup Dass", "Basti Bawrian", "Basti Dilawar Singh",
+    "Barhan Bahtti","Chak Totian Wala", "Barhandinwala", "Basti Baba Sarup Dass", "Basti Bawrian", "Basti Dilawar Singh",
     "Basti Kera Wali", "Basti Mohar Singh", "Basti Phuman Shah", "Behak Hasta Hithar", "Behak Hasta Uttar",
     "Bhamba Wattu Hithar", "Bhamba Wattu Uttar", "Bharoli Wala", "Bilimar", "Bodel Pire Ke",
     "Bula Rai Hithar", "Bula Rai Uttar", "Bura Sarwan", "Burwala", "Chak Arainwala", "Chak Arniwala",
@@ -419,6 +419,7 @@ function getPunjabiAddress(village, district, state, pincode) {
         'Baghuwala': 'ਬਘੂਵਾਲਾ',
         'Bahadar Ke': 'ਬਹਾਦਰ ਕੇ',
         'Bahmani Wala': 'ਬਾਹਮਣੀ ਵਾਲਾ',
+        'Chak Totian Wala': 'ਹਰ ਤੋਤਿਆ ਵਾਲਾ',
         'Baje Ke': 'ਬਾਜੇ ਕੇ',
         'Balalke Kamalwala': 'ਬਲਾਲਕੇ ਕਮਾਲਵਾਲਾ',
         'Taro Bari': 'ਤਾਰੋ ਬਾੜੀ'
