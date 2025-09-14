@@ -419,7 +419,7 @@ function getPunjabiAddress(village, district, state, pincode) {
         'Baghuwala': 'ਬਘੂਵਾਲਾ',
         'Bahadar Ke': 'ਬਹਾਦਰ ਕੇ',
         'Bahmani Wala': 'ਬਾਹਮਣੀ ਵਾਲਾ',
-        'Chak Totian Wala': 'ਹਰ ਤੋਤਿਆ ਵਾਲਾ',
+        'Chak Totian Wala': 'ਚੱਕ ਤੋਤਿਆ ਵਾਲਾ',
         'Baje Ke': 'ਬਾਜੇ ਕੇ',
         'Balalke Kamalwala': 'ਬਲਾਲਕੇ ਕਮਾਲਵਾਲਾ',
         'Taro Bari': 'ਤਾਰੋ ਬਾੜੀ'
