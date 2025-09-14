@@ -320,6 +320,9 @@ textarea {
     overflow: hidden;
     background: #37303024;
 }
+.none-Ad{
+    display: none;
+}
 
 .address-details {
     position: absolute;
