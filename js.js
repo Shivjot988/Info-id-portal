@@ -124,10 +124,9 @@ function ProductCard(product) {
                 </div>
 
                 <div class="form-row" style="margin-top:10px;">
-                    <div class="form-group">
+                    <div class="form-group none-Ad">
                         <label for="address-label-en-select">English Address</label>
                         <select id="address-label-en-select">
-                        <option value="Address :">Select</option>
                         <option value="Address :">Address :</option>
                         </select>
                     </div>
