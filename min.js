@@ -32,7 +32,7 @@ const villages = [
     "Chak Megha Wiran", "Chak Mochanwala", "Chak Mohamdewala", "Chak Nidana", "Chak Paliwala",
     "Chak Paniwala", "Chak Panj Kohi", "Chak Panje Ke", "Chak Punnawali", "Chak Qabarwala",
     "Chak Rakh Amir", "Chak Rohiwala", "Chak Romwala", "Chak Roranwala", "Chak Saidoke", "Chak Sarian",
-    "Chak Sarkar Mahazi Parbhat Singhwala", "Chak Sarkar", 'Chak 	Totianwala', "Chak Sawah Wala",
+    "Chak Sarkar Mahazi Parbhat Singhwala", "Chak Sarkar", 'Chak Totianwala', "Chak Sawah Wala",
     "Chak Shikargah", "Chak Singhewala", "Chak Sohlewala", "Chak Sohna Sandar", "Chak Somianwala",
     "Chak Sotria", "Chak Sukar", "Chak Sukhera", "Chak Tahliwala", "Changa Kalan", "Changa Khurd",
     "Chhanga Rai Hithar", "Chhanga Rai Uttar", "Chugha", "Dhab Karyal", "Dhab Khushal Joya",
