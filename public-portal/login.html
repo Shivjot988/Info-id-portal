@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Info ID Portal | Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="auth.js" defer></script>
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-panel">
+      <div class="auth-brand">
+        <h1>Info ID Portal</h1>
+        <p>Secure sign-in and registration powered by Supabase.</p>
+      </div>
+      <div class="auth-tabs">
+        <button id="signInTab" class="tab active">Sign In</button>
+        <button id="signUpTab" class="tab">Register</button>
+      </div>
+      <form id="authForm" class="auth-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Enter password" required minlength="6" />
+        </div>
+        <div class="form-actions">
+          <button id="submitButton" type="submit" class="button primary">Sign In</button>
+        </div>
+        <p id="authMessage" class="auth-message"></p>
+      </form>
+      <div class="auth-footer">
+        <p>Or continue with</p>
+        <div class="social-row">
+          <button id="githubButton" class="button secondary">GitHub</button>
+          <button id="googleButton" class="button secondary">Google</button>
+        </div>
+      </div>
+      <p class="privacy-note">By signing in, you agree to the portal's privacy policy and terms.</p>
+    </div>
+  </div>
+</body>
+</html>
