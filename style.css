@@ -366,10 +366,14 @@ select:focus, input:focus {
     width: 66%;
     height: 90px;
     font-size: 9px;
+    padding-top: 5px;
 }
 
 .address-details p:nth-child(3) {
     margin-top: 4px;
+}
+p#preview-address-punjabi {
+    margin-top: 3px;
 }
 
 .placeholder-back {
@@ -564,6 +568,72 @@ footer {
 
     .card-wrapper {
         transform: scale(0.85) !important;
+    }
+}
+
+/* Very small screens (e.g., iPhone SE, older phones) */
+@media (max-width: 320px) {
+    .card-wrapper {
+        transform: scale(0.75) !important; /* Further scale down for very small screens */
+        margin: 5px auto !important; /* Adjust margin */
+    }
+    .form-row {
+        /* Force single column on very small screens for better readability and to prevent overflow */
+        grid-template-columns: 1fr !important; 
+        gap: 5px !important; /* Reduce gap */
+    }
+    .form-group {
+        padding: 2px 4px; /* Reduce padding slightly */
+    }
+    label {
+        font-size: 9px; /* Slightly smaller font for labels */
+    }
+    select,
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="file"] {
+        font-size: 10px !important; /* Slightly smaller font for inputs */
+        height: 26px !important; /* Adjust height */
+    }
+    .choices__inner,
+    .choices__list--dropdown .choices__item {
+        font-size: 10px !important;
+        min-height: 26px !important;
+        height: 26px !important;
+    }
+    .preview-section {
+        padding: 8px 3px; /* Reduce padding */
+    }
+    .controls, .controls-min {
+        flex-direction: column; /* Stack buttons vertically for better touch target */
+        align-items: stretch; /* Make buttons full width */
+    }
+    button, #export-format {
+        width: 100%; /* Make buttons full width */
+        margin-bottom: 5px; /* Add some space between stacked buttons */
+    }
+    /* Adjust card element positioning and sizing for smaller scale */
+    .card-front, .card-back {
+        padding: 10px;
+    }
+    .photo-placeholder-front {
+        width: 60px; height: 70px; top: 35px; left: 5px;
+    }
+    .placeholder-front {
+        width: 45px; height: 45px; top: 70px; right: 2px;
+    }
+    .card-details {
+        top: 30px; left: 70px; width: calc(100% - 80px); font-size: 8px;
+    }
+    .card-number {
+        font-size: 14px; bottom: 10px;
+    }
+    .address-details {
+        top: 30px; left: 8px; width: 60%; font-size: 8px;
+    }
+    .placeholder-back {
+        width: 60px; height: 60px; top: 35px; right: 5px;
     }
 }
 

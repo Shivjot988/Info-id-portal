@@ -2,19 +2,20 @@
 let card, flipBtn, previewBtn, resetBtn, downloadBtn, downloadA4Btn, spinner, exportFormatSelect;
 let tempCanvasContainer, successMessage, jsPdfLoaded = false;
 let idNumberInput, nameEnglishInput, namePunjabiInput, dobInput, genderInput, tehsilInput;
-let addressTypeInput, addressNameInput, addressTypePunjabiInput, addressNamePunjabiInput;
-let villageInput, pincodeInput;
+let addressTypeInput, addressNameInput, addressTypePunjabiInput, addressNamePunjabiInput, stateInput;
+let villageInput, pincodeInput; 
 let translateFromSelect, translateToSelect;
 let passportPhotoInput, barcodeInput, photoPreviewThumb, barcodePreviewThumb;
 let frontPicInput, backPicInput, frontPicPlaceholder, backPicPlaceholder, frontPicPreviewThumb, backPicPreviewThumb;
 let dobLabelSelect, addressLabelEnSelect, addressLabelPaSelect;
 let previewIdNumber, previewIdNumberBack, previewNameEnglish, previewNamePunjabi;
 let previewDob, previewGender, previewDobLabel, previewAddressLabelEn, previewAddressLabelPa;
-let previewAddressType, previewAddressName, previewAddressTypePunjabi, previewAddressNamePunjabi;
+let previewAddressType, previewAddressName, previewAddressTypePunjabi, previewAddressNamePunjabi; 
 let previewAddressEnglish, previewAddressPunjabi;
 let photoPlaceholderFront, placeholderFront, placeholderBack, cardFront, cardBack, cardWrapper;
-let pincodeChoice, tehsilChoice, villageChoice;
-let currentDistrict = '';
+let stateChoice, pincodeChoice, tehsilChoice, villageChoice;
+let currentState = '';
+let currentDistrict = ''; 
 let isDownloading = false; // Security flag to prevent anti-screenshot during downloads
 
 // Initialize the application
@@ -28,11 +29,12 @@ function init() {
         shouldSort: false,
         allowHTML: false,
     };
+    stateChoice = new Choices(stateInput, choiceOptions);
     pincodeChoice = new Choices(pincodeInput, choiceOptions);
     tehsilChoice = new Choices(tehsilInput, choiceOptions);
     villageChoice = new Choices(villageInput, choiceOptions);
 
-    populatePincodeDropdown();
+    populateStateDropdown();
     initializeDefaults();
     updatePreview();
 }
@@ -63,6 +65,7 @@ function cacheDomElements() {
     villageInput = document.getElementById('village');
     pincodeInput = document.getElementById('pincode');
     tehsilInput = document.getElementById('tehsil');
+    stateInput = document.getElementById('state');
 
     translateFromSelect = document.getElementById('translate-from');
     translateToSelect = document.getElementById('translate-to');
@@ -125,6 +128,7 @@ function setupEventListeners() {
     villageInput.addEventListener('change', handleAddressChange);
     pincodeInput.addEventListener('change', handlePincodeChange);
     tehsilInput.addEventListener('change', handleTehsilChange);
+    stateInput.addEventListener('change', handleStateChange);
 
     addressTypeInput.addEventListener('change', updatePreview);
     addressTypePunjabiInput.addEventListener('change', updatePreview);
@@ -199,18 +203,41 @@ function setupSecurityListeners() {
     });
 }
 
-function populatePincodeDropdown() {
-    if (typeof pincodeList === 'undefined') return;
-    const choices = pincodeList.map(pincode => ({
-        value: pincode.value,
-        label: pincode.text,
-        customProperties: { district: pincode.district }
+function populateStateDropdown() {
+    if (typeof stateList === 'undefined') return;
+    const choices = stateList.map(state => {
+        const parts = state.label.split(' / ');
+        const englishDisplay = parts[0].trim();
+        return {
+            value: state.value,
+            label: englishDisplay, // ड्रॉपडाउन में केवल अंग्रेजी नाम दिखाएं
+            customProperties: state.customProperties // कार्ड के पीछे पंजाबी के लिए पूरा customProperties रखें
+        };
+    });
+    stateChoice.setChoices(choices, 'value', 'label', true);
+}
+
+function populatePincodeDropdown(pincodes) {
+    if (!pincodes) return;
+    const choices = pincodes.map(pincode => ({
+        value: pincode.value, // पिनकोड का संख्यात्मक मान
+        label: pincode.text.split(' / ')[0].trim(), // ड्रॉपडाउन में केवल अंग्रेजी नाम दिखाएं
+        customProperties: {
+            district: pincode.district,
+            punjabiText: pincode.text.split(' / ')[1] ? pincode.text.split(' / ')[1].trim() : '' // पंजाबी टेक्स्ट को customProperties में स्टोर करें
+        }
     }));
+    pincodeChoice.clearStore();
+    pincodeChoice.clearInput();
     pincodeChoice.setChoices(choices, 'value', 'label', true);
 }
 
 function populateTehsilDropdown(tehsils) {
-    const choices = tehsils.map(tehsil => ({ value: tehsil, label: tehsil }));
+    const choices = tehsils.map(tehsil => ({
+        value: tehsil.name,
+        label: tehsil.name,
+        customProperties: { punjabi: tehsil.punjabi }
+    }));
     tehsilChoice.clearStore();
     tehsilChoice.setChoices(choices, 'value', 'label', true);
 }
@@ -219,12 +246,10 @@ function populateVillageDropdown(villages) {
     let choices;
     if (villages.length > 0 && typeof villages[0] === 'object' && villages[0] !== null && 'name' in villages[0]) {
         choices = villages.map(village => {
-            const cleanName = village.name.replace(/\s*\(\d+\)$/, '').trim();
-            const cleanPunjabiName = (village.punjabi || village.punjabi_name || '').replace(/\s*\(\d+\)$/, '').trim();
             return {
-                value: cleanName,
+                value: village.name,
                 label: village.name,
-                customProperties: { punjabi: cleanPunjabiName }
+                customProperties: { punjabi: (village.punjabi || village.punjabi_name || '').trim() }
             };
         });
     } else {
@@ -273,6 +298,29 @@ function handleManualAddressNamePunjabiInput() {
     if (addressNamePunjabiInput.value.trim()) addressNamePunjabiInput.dataset.manual = '1';
     else delete addressNamePunjabiInput.dataset.manual;
     updatePreview();
+}
+
+function handleStateChange() {
+    const selectedItem = stateChoice.getValue();
+    currentState = selectedItem ? selectedItem.value : '';
+
+    if (typeof pincodeList !== 'undefined' && typeof districtStateMap !== 'undefined') {
+        const filteredPincodes = pincodeList.filter(pincode => {
+            const district = pincode.district;
+            return districtStateMap[district] === currentState;
+        });
+        populatePincodeDropdown(filteredPincodes);
+    } else {
+        populatePincodeDropdown([]); // Clear pincodes if data is missing
+    }
+
+    // Clear dependent dropdowns
+    currentDistrict = '';
+    tehsilChoice.clearStore();
+    tehsilChoice.clearInput();
+    villageChoice.clearStore();
+    villageChoice.clearInput();
+    handleAddressChange();
 }
 
 function handlePincodeChange() {
@@ -371,42 +419,61 @@ async function autoTranslateAddressName() {
     spinner.style.display = 'none';
 }
 
-async function autoTranslateFullAddress() {
-    const from = translateFromSelect.value || 'en';
-    const to = translateToSelect.value || 'pa';
+// यह फ़ंक्शन अब कार्ड के पीछे पंजाबी पते को पॉप्युलेट करने के लिए ज़िम्मेदार है।
+// यह आपकी लोकल डेटा फ़ाइलों (village.js, Pincode.js, State.js) से पूर्वनिर्धारित पंजाबी टेक्स्ट का उपयोग करता है।
+function autoTranslateFullAddress() {
+    // Get the full selected choice objects to access all their properties
+    const selectedVillageChoice = villageChoice.getValue();
+    const selectedPincodeChoice = pincodeChoice.getValue();
+    const selectedStateChoice = stateChoice.getValue();
+    const selectedTehsilChoice = tehsilChoice.getValue(); // Choices.js object for tehsil
+    const tehsilEn = selectedTehsilChoice ? selectedTehsilChoice.value : '';
+    const villageEn = selectedVillageChoice ? selectedVillageChoice.value : '';
 
-    const selectedVillageChoice = villageChoice.getValue(); // Get full choice object
-    const village = selectedVillageChoice ? selectedVillageChoice.value : '';
-    const punjabiVillage = selectedVillageChoice && selectedVillageChoice.customProperties ? selectedVillageChoice.customProperties.punjabi : '';
-
-    const tehsil = tehsilChoice.getValue(true) || '';
-    const district = currentDistrict || '';
-    const state = 'Punjab';
-    const pincode = pincodeChoice.getValue(true) || '';
-
-    const addressToTranslate = [tehsil, district, state].filter(Boolean).join(', ') + (pincode ? ` - ${pincode}` : '');
-
-    if (!village && !addressToTranslate.trim()) {
-        previewAddressPunjabi.textContent = ''; // Clear or set to default
+    // If no address parts are selected, reset the Punjabi address preview.
+    if (!villageEn && !tehsilEn && !selectedPincodeChoice) {
+        previewAddressPunjabi.textContent = 'ਪਤਾ:';
         return;
     }
 
-    spinner.style.display = 'block';
-    try {
-        const translatedRestOfAddress = await translateText(addressToTranslate, from, to);
-        const punjabiVillagePart = punjabiVillage || village;
-        const fullPunjabiAddress = [punjabiVillagePart, translatedRestOfAddress].filter(Boolean).join(', ');
+    // 1. गांव (Village): village.js से पंजाबी नाम प्राप्त करें।
+    // यदि customProperties में पंजाबी नाम है, तो उसका उपयोग करें; अन्यथा, अंग्रेजी नाम (मैन्युअल या चयनित) का उपयोग करें।
+    const punjabiVillage = (selectedVillageChoice?.customProperties?.punjabi)
+        ? selectedVillageChoice.customProperties.punjabi
+        : villageEn; // मैन्युअल एंट्री के लिए टाइप किया गया अंग्रेजी नाम
 
-        if (fullPunjabiAddress) {
-            previewAddressPunjabi.textContent = fullPunjabiAddress;
-        }
-    } catch (err) {
-        console.error('Translation error in autoTranslateFullAddress:', err);
-        const englishAddress = [village, addressToTranslate].filter(Boolean).join(', ');
-        previewAddressPunjabi.textContent = englishAddress;
-    } finally {
-        spinner.style.display = 'none';
+    // 2. तहसील (Tehsil): Tehsil.js से पंजाबी नाम प्राप्त करें।
+    // यदि customProperties में पंजाबी नाम है, तो उसका उपयोग करें; अन्यथा, अंग्रेजी नाम (मैन्युअल या चयनित) का उपयोग करें।
+    const punjabiTehsil = (selectedTehsilChoice?.customProperties?.punjabi)
+        ? selectedTehsilChoice.customProperties.punjabi
+        : tehsilEn; // मैन्युअल एंट्री के लिए टाइप किया गया अंग्रेजी नाम
+
+    // 3. पिनकोड/जिला (Pincode/District): Pincode.js से पूरा पंजाबी टेक्स्ट निकालें।
+    let punjabiDistrictPart = '';
+    // यदि customProperties में पंजाबी टेक्स्ट है (पहले से मौजूद डेटा), तो उसका उपयोग करें।
+    if (selectedPincodeChoice?.customProperties?.punjabiText) {
+        punjabiDistrictPart = selectedPincodeChoice.customProperties.punjabiText;
+    } else if (selectedPincodeChoice?.value) {
+        // यदि मैन्युअल एंट्री है (customProperties.punjabiText नहीं है), तो अंग्रेजी पिनकोड मान का उपयोग करें।
+        punjabiDistrictPart = selectedPincodeChoice.value;
     }
+
+    // 4. राज्य (State): State.js से पंजाबी नाम प्राप्त करें।
+    // यदि customProperties में पंजाबी नाम है, तो उसका उपयोग करें; अन्यथा, अंग्रेजी नाम (मैन्युअल या चयनित) का उपयोग करें।
+    const punjabiState = (selectedStateChoice?.customProperties?.punjabi)
+        ? selectedStateChoice.customProperties.punjabi
+        : (selectedStateChoice ? selectedStateChoice.value : currentState); // मैन्युअल एंट्री के लिए टाइप किया गया अंग्रेजी नाम
+
+    // 5. पिनकोड नंबर प्राप्त करें।
+    const pincode = selectedPincodeChoice ? selectedPincodeChoice.value : '';
+
+    // 6. सभी भागों को मिलाकर पूरा पंजाबी पता बनाएं और पिनकोड जोड़ें।
+    const punjabiAddressParts = [punjabiVillage, punjabiTehsil, punjabiDistrictPart, punjabiState].filter(Boolean);
+    let fullPunjabiAddress = punjabiAddressParts.join(', ');
+    if (pincode && !fullPunjabiAddress.includes(pincode)) { // पिनकोड नंबर को तभी जोड़ें जब वह पहले से पते में शामिल न हो
+        fullPunjabiAddress += ` - ${pincode}`;
+    }
+    previewAddressPunjabi.textContent = fullPunjabiAddress || 'ਪਤਾ:';
 }
 
 function updatePreview() {
@@ -426,13 +493,20 @@ function updatePreview() {
         previewAddressTypePunjabi.textContent = addressTypePunjabiInput.value || 'W/O';
         previewAddressNamePunjabi.textContent = addressNamePunjabiInput.value || 'ਜੌਹਨ ਡੋ';
 
-        const village = villageChoice.getValue(true) || 'Village 1';
-        const tehsil = tehsilChoice.getValue(true) || 'Tehsil 1';
-        const district = currentDistrict || 'Amritsar';
-        const state = 'Punjab';
-        const pincode = pincodeChoice.getValue(true) || '143001';
+        // Construct and display the full English address based on current selections.
+        const village = villageChoice.getValue(true) || '';
+        const tehsil = tehsilChoice.getValue(true) || '';
+        const district = currentDistrict || ''; 
+        const state = currentState || '';
+        const pincode = pincodeChoice.getValue(true) || '';
 
-        previewAddressEnglish.textContent = `${village}, ${tehsil}, ${district}, ${state} - ${pincode}`;
+        const addressParts = [village, tehsil, district, state].filter(Boolean);
+        let fullEnglishAddress = addressParts.join(', ');
+        if (pincode) {
+            fullEnglishAddress += ` - ${pincode}`;
+        }
+
+        previewAddressEnglish.textContent = fullEnglishAddress || 'Address, City, State - Pincode';
 
         spinner.style.display = 'none';
     }, 250);
@@ -483,29 +557,49 @@ function handleImageUpload(input, placeholder, thumbnail) {
 }
 
 function resetForm() {
-    document.querySelector('.card-creator').reset();
+    // Manually reset all text and date input fields
+    [
+        idNumberInput, nameEnglishInput, namePunjabiInput, dobInput,
+        addressNameInput, addressNamePunjabiInput
+    ].forEach(input => input.value = '');
 
+    // Manually reset all file inputs
+    [passportPhotoInput, barcodeInput, frontPicInput, backPicInput].forEach(input => input.value = null);
+
+    // Manually reset all select fields to their first option
+    [
+        genderInput, addressTypeInput, addressTypePunjabiInput,
+        translateFromSelect, translateToSelect
+    ].forEach(select => select.selectedIndex = 0);
+
+    // Clear manual input flags
     delete namePunjabiInput.dataset.manual;
     delete addressNamePunjabiInput.dataset.manual;
 
-    pincodeChoice.clearStore();
-    pincodeChoice.clearInput();
-    tehsilChoice.clearStore();
-    tehsilChoice.clearInput();
-    villageChoice.clearStore();
-    villageChoice.clearInput();
-    populatePincodeDropdown();
+    // Clear Choices.js dropdowns
+    stateChoice.clearStore(); stateChoice.clearInput();
+    pincodeChoice.clearStore(); pincodeChoice.clearInput();
+    tehsilChoice.clearStore(); tehsilChoice.clearInput();
+    villageChoice.clearStore(); villageChoice.clearInput();
+    
+    // Repopulate the initial dropdown and set default labels
+    populateStateDropdown();
+    initializeDefaults();
 
+    // Clear image placeholders and thumbnails
     [photoPlaceholderFront, placeholderFront, placeholderBack, frontPicPlaceholder, backPicPlaceholder].forEach(p => {
-        p.innerHTML = p.title || '';
-        p.style.backgroundImage = '';
+        // Remove any existing img child
+        while (p.firstChild) {
+            p.removeChild(p.firstChild);
+        }
+        // Restore placeholder text
+        if (p.id === 'front-pic-placeholder') p.textContent = 'Front Pic';
+        else if (p.id === 'back-pic-placeholder') p.textContent = 'Back Pic';
+        else if (p.classList.contains('photo-placeholder-front')) p.textContent = 'Pass Photo';
+        else if (p.classList.contains('placeholder-front') || p.classList.contains('placeholder-back')) p.textContent = 'Barcode/QR';
+        
         delete p.dataset.imageData;
     });
-    photoPlaceholderFront.innerHTML = 'Pass Photo';
-    placeholderFront.innerHTML = 'Barcode/QR';
-    placeholderBack.innerHTML = 'Barcode/QR';
-    frontPicPlaceholder.innerHTML = 'Front Pic';
-    backPicPlaceholder.innerHTML = 'Back Pic';
 
     [photoPreviewThumb, barcodePreviewThumb, frontPicPreviewThumb, backPicPreviewThumb].forEach(thumb => {
         if (thumb) {
@@ -513,15 +607,22 @@ function resetForm() {
             thumb.style.display = 'none';
         }
     });
+
+    // Reset global state variables
+    currentState = '';
+    currentDistrict = '';
+
+    // Update the card preview to show the cleared state
     updatePreview();
     showSuccessMessage(false);
 }
 
 function showSuccessMessage(show = true) {
-    if (show) {
+    // Ensure successMessage element exists before trying to use it
+    if (successMessage && show) {
         successMessage.style.display = 'block';
         setTimeout(() => { successMessage.style.display = 'none'; }, 3000);
-    } else {
+    } else if (successMessage) {
         successMessage.style.display = 'none';
     }
 }

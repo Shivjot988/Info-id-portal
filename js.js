@@ -163,24 +163,30 @@ return `
             </div>
 
             <div class="form-row">
-                <div class="form-group">
-                    <label for="pincode">Pincode</label>
-                    <select id="pincode">
-                        <option value="">Select Pincode</option>
+                 <div class="form-group">
+                    <label for="state">State</label>
+                    <select id="state">
+                        <option value="">Select State</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="tehsil">Tehsil</label>
-                    <select id="tehsil">
-                        <option value="">Select Tehsil</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="village">Village</label>
-                    <select id="village">
-                        <option value="">Select Village</option>
-                    </select>
-                </div>
+                 <div class="form-group">
+                     <label for="pincode">Pincode</label>
+                     <select id="pincode">
+                         <option value="">Select Pincode</option>
+                     </select>
+                 </div>
+                 <div class="form-group">
+                     <label for="tehsil">Tehsil</label>
+                     <select id="tehsil">
+                         <option value="">Select Tehsil</option>
+                     </select>
+                 </div>
+                 <div class="form-group">
+                     <label for="village">Village</label>
+                     <select id="village">
+                         <option value="">Select Village</option>
+                     </select>
+                 </div>
             </div>
 
             <h3>Card Photos</h3>
@@ -226,6 +232,8 @@ return `
 
         <div class="preview-section">
             <h3>Card Preview</h3>
+
+            <div id="success-message" style="display: none; color: green; background: #e0ffe0; border: 1px solid #a0d0a0; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 10px;">Operation successful!</div>
 
             <div class="card-preview-container">
                 <div class="card-wrapper">
